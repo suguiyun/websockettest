@@ -10,6 +10,7 @@ import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.dto.UserDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import com.mycompany.myapp.web.rest.errors.EmailAlreadyUsedException;
+import com.mycompany.myapp.web.rest.errors.InternalServerErrorException;
 import com.mycompany.myapp.web.rest.errors.LoginAlreadyUsedException;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import com.mycompany.myapp.web.rest.util.PaginationUtil;
@@ -23,6 +24,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,7 +51,7 @@ import java.util.*;
  * <li> Not having an outer join causes n+1 requests to the database. This is not a real issue as
  * we have by default a second-level cache. This means on the first HTTP call we do the n+1 requests,
  * but then all authorities come from the cache, so in fact it's much better than doing an outer join
- * (which will get lots of data from the database, for each HTTP call).</li>
+ * (which will get lots of data from the database, for each HTTP call).</li>¡
  * <li> As this manages users, for security reasons, we'd rather have a DTO layer.</li>
  * </ul>
  * <p>
@@ -71,6 +74,18 @@ public class UserResource {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+    }
+
+    @GetMapping("/test")
+    public Object test(){
+        if(1==1){
+//            throw new EmailAlreadyUsedException();
+            throw new InternalServerErrorException("test test test test test test");
+        }
+//        Authentication authentication1 =  SecurityContextHolder.getContext().getAuthentication();
+
+//        userService.aaaa();
+        return "test successful";
     }
 
     /**
